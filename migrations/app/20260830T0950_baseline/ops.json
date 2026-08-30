@@ -1,0 +1,295 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.generation",
+    "label": "Create table \"generation\"",
+    "summary": "Creates table \"generation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "generation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"generation\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"generation\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"generation\"",
+        "sql": "CREATE TABLE \"public\".\"generation\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"orgId\" text NOT NULL,\n  \"r2ObjectKey\" text,\n  \"repetitionPenalty\" float8 NOT NULL,\n  \"temperature\" float8 NOT NULL,\n  \"text\" text NOT NULL,\n  \"topK\" int4 NOT NULL,\n  \"topP\" float8 NOT NULL,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"voiceId\" text,\n  \"voiceName\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"generation\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"generation\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.voice",
+    "label": "Create table \"voice\"",
+    "summary": "Creates table \"voice\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "voice"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"voice\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"voice\"",
+        "sql": "CREATE TABLE \"public\".\"voice\" (\n  \"category\" text DEFAULT 'GENERAL' NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" text NOT NULL,\n  \"language\" text DEFAULT 'en-US' NOT NULL,\n  \"name\" text NOT NULL,\n  \"orgId\" text,\n  \"r2ObjectKey\" text,\n  \"updatedAt\" timestamptz NOT NULL,\n  \"variant\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"voice_category_check_4b32346a\" CHECK (\"category\" IN ('AUDIOBOOK', 'CONVERSATIONAL', 'CUSTOMER_SERVICE', 'GENERAL', 'NARRATIVE', 'CHARACTERS', 'MEDITATION', 'MOTIVATIONAL', 'PODCAST', 'ADVERTISING', 'VOICEOVER', 'CORPORATE')),\n  CONSTRAINT \"voice_variant_check_3cc27d96\" CHECK (\"variant\" IN ('SYSTEM', 'CUSTOM'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"voice\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.generation.generation_orgId_idx_c5e5aabe",
+    "label": "Create index \"generation_orgId_idx_c5e5aabe\" on \"generation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "generation_orgId_idx_c5e5aabe",
+        "table": "generation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"generation_orgId_idx_c5e5aabe\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"generation_orgId_idx_c5e5aabe\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"generation_orgId_idx_c5e5aabe\"",
+        "sql": "CREATE INDEX \"generation_orgId_idx_c5e5aabe\" ON \"public\".\"generation\" (\"orgId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"generation_orgId_idx_c5e5aabe\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"generation_orgId_idx_c5e5aabe\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.generation.generation_voiceId_idx_9486803e",
+    "label": "Create index \"generation_voiceId_idx_9486803e\" on \"generation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "generation_voiceId_idx_9486803e",
+        "table": "generation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"generation_voiceId_idx_9486803e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"generation_voiceId_idx_9486803e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"generation_voiceId_idx_9486803e\"",
+        "sql": "CREATE INDEX \"generation_voiceId_idx_9486803e\" ON \"public\".\"generation\" (\"voiceId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"generation_voiceId_idx_9486803e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"generation_voiceId_idx_9486803e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.voice.voice_orgId_idx_c5e5aabe",
+    "label": "Create index \"voice_orgId_idx_c5e5aabe\" on \"voice\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "voice_orgId_idx_c5e5aabe",
+        "table": "voice"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"voice_orgId_idx_c5e5aabe\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice_orgId_idx_c5e5aabe\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"voice_orgId_idx_c5e5aabe\"",
+        "sql": "CREATE INDEX \"voice_orgId_idx_c5e5aabe\" ON \"public\".\"voice\" (\"orgId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"voice_orgId_idx_c5e5aabe\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice_orgId_idx_c5e5aabe\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.voice.voice_variant_idx_132d5bea",
+    "label": "Create index \"voice_variant_idx_132d5bea\" on \"voice\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "voice_variant_idx_132d5bea",
+        "table": "voice"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"voice_variant_idx_132d5bea\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice_variant_idx_132d5bea\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"voice_variant_idx_132d5bea\"",
+        "sql": "CREATE INDEX \"voice_variant_idx_132d5bea\" ON \"public\".\"voice\" (\"variant\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"voice_variant_idx_132d5bea\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"voice_variant_idx_132d5bea\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.generation.generation_voiceId_fkey",
+    "label": "Add foreign key \"generation_voiceId_fkey\" on \"generation\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "generation_voiceId_fkey",
+        "table": "generation"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"generation_voiceId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "generation_voiceId_fkey",
+          "public",
+          "\"public\".\"generation\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"generation_voiceId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"generation\"\nADD CONSTRAINT \"generation_voiceId_fkey\"\nFOREIGN KEY (\"voiceId\")\nREFERENCES \"public\".\"voice\" (\"id\")\nON DELETE SET NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"generation_voiceId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "generation_voiceId_fkey",
+          "public",
+          "\"public\".\"generation\""
+        ]
+      }
+    ]
+  }
+]
