@@ -144,7 +144,7 @@ export function DashboardSidebar() {
             className="rounded-sm"
           />
           <span className="group-data-[collapsible=icon]:hidden font-semibold text-lg tracking-tighter text-foreground">
-            Sonar
+            Sonara
           </span>
           <SidebarTrigger className="ml-auto lg:hidden" />
         </div>
