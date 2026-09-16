@@ -52,6 +52,7 @@
     "superjson": "^2.2.6",
     "tailwind-merge": "^3.6.0",
     "vaul": "^1.1.2",
+    "wavesurfer.js": "^7.12.12",
     "zod": "^4.5.4"
   },
   "devDependencies": {
