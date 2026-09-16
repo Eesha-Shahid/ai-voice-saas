@@ -11,4 +11,4 @@ if (!globalForDb.dbConnected) {
   globalForDb.dbConnected = true;
 }
 
-export const db = prismaDb;
+export const prisma = prismaDb;

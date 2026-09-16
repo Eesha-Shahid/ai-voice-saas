@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { deleteAudio } from "@/lib/r2";
 import { createTRPCRouter, orgProcedure } from "../init";
 import { or } from "@prisma/orm-postgres/orm-client";
@@ -28,20 +28,20 @@ export const voicesRouter = createTRPCRouter({
       const q = input?.query;
 
       const customQuery = q
-        ? db.orm.public.Voice.where({
+        ? prisma.orm.public.Voice.where({
             variant: "CUSTOM",
             orgId: ctx.orgId,
           }).where((v) => or(v.name.ilike(`%${q}%`), v.description.ilike(`%${q}%`)))
-        : db.orm.public.Voice.where({
+        : prisma.orm.public.Voice.where({
             variant: "CUSTOM",
             orgId: ctx.orgId,
           });
 
       const systemQuery = q
-        ? db.orm.public.Voice.where({ variant: "SYSTEM" }).where((v) =>
+        ? prisma.orm.public.Voice.where({ variant: "SYSTEM" }).where((v) =>
             or(v.name.ilike(`%${q}%`), v.description.ilike(`%${q}%`)),
           )
-        : db.orm.public.Voice.where({ variant: "SYSTEM" });
+        : prisma.orm.public.Voice.where({ variant: "SYSTEM" });
 
       const [custom, system] = await Promise.all([
         customQuery
@@ -60,7 +60,7 @@ export const voicesRouter = createTRPCRouter({
   delete: orgProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const voice = await db.orm.public.Voice.where({
+      const voice = await prisma.orm.public.Voice.where({
         id: input.id,
         variant: "CUSTOM",
         orgId: ctx.orgId,
