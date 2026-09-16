@@ -10,7 +10,7 @@ import {
   type PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 
-import { db } from "../src/lib/db";
+import { prisma } from "../src/lib/db";
 import { CANONICAL_SYSTEM_VOICE_NAMES } from "../src/features/voices/data/voice-scoping";
 import { VoiceCategory } from "@/features/voices/data/voice-categories";
 
@@ -176,7 +176,7 @@ async function uploadSystemVoiceAudio({
 async function seedSystemVoice(name: typeof CANONICAL_SYSTEM_VOICE_NAMES[number]) {
   const { buffer, contentType } = await readSystemVoiceAudio(name);
 
-  const existingSystemVoice = await db.orm.public.Voice.select("id")
+  const existingSystemVoice = await prisma.orm.public.Voice.select("id")
     .where({ variant: "SYSTEM", name })
     .first();
 
@@ -190,7 +190,7 @@ async function seedSystemVoice(name: typeof CANONICAL_SYSTEM_VOICE_NAMES[number]
       contentType,
     });
 
-    await db.orm.public.Voice.where({ id: existingSystemVoice.id }).update({
+    await prisma.orm.public.Voice.where({ id: existingSystemVoice.id }).update({
       r2ObjectKey,
       ...(meta && {
         description: meta.description,
@@ -203,7 +203,7 @@ async function seedSystemVoice(name: typeof CANONICAL_SYSTEM_VOICE_NAMES[number]
 
   const meta = systemVoiceMetadata[name];
 
-  const voice = await db.orm.public.Voice.select("id").create({
+  const voice = await prisma.orm.public.Voice.select("id").create({
     name,
     variant: "SYSTEM",
     orgId: null,
@@ -223,11 +223,11 @@ async function seedSystemVoice(name: typeof CANONICAL_SYSTEM_VOICE_NAMES[number]
       contentType,
     });
 
-    await db.orm.public.Voice.where({ id: voice.id }).update({
+    await prisma.orm.public.Voice.where({ id: voice.id }).update({
       r2ObjectKey,
     });
   } catch (error) {
-    await db.orm.public.Voice.where({ id: voice.id })
+    await prisma.orm.public.Voice.where({ id: voice.id })
       .delete()
       .catch(() => {});
 
