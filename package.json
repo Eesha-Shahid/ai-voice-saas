@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "contract:emit": "prisma contract emit",
-    "seed": "tsx scripts/seed-system-voices.ts"
+    "seed": "tsx scripts/seed-system-voices.ts",
+    "sync-api": "tsx scripts/sync-api.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1123.0",
@@ -37,6 +38,7 @@
     "lucide-react": "^1.34.0",
     "next": "16.3.3",
     "next-themes": "^0.4.6",
+    "openapi-fetch": "^0.17.0",
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-day-picker": "^10.0.1",
@@ -59,6 +61,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.3",
+    "openapi-typescript": "^7.13.0",
     "prisma": "^8.0.0-rc.10",
     "shadcn": "^4.19.0",
     "tailwindcss": "^4",
