@@ -46,3 +46,5 @@ dist/
 
 __pycache__
 venv
+# Sentry Config File
+.env.sentry-build-plugin

@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { chatterbox } from "@/lib/chatterbox-client";
@@ -67,6 +68,12 @@ export const generationsRouter = createTRPCRouter({
           message: "Voice audio not available",
         });
       }
+      
+      Sentry.logger.info("Generation started", {
+        orgId: ctx.orgId,
+        voiceId: input.voiceId,
+        textLength: input.text.length,
+      });
 
       const { data, error } = await chatterbox.POST("/generate", {
         body: {
@@ -82,6 +89,11 @@ export const generationsRouter = createTRPCRouter({
       });
 
       if (error) {
+        Sentry.logger.error("Chatterbox generation request failed", {
+          orgId: ctx.orgId,
+          voiceId: input.voiceId,
+        });
+
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to generate audio",
@@ -122,6 +134,11 @@ export const generationsRouter = createTRPCRouter({
         await prisma.orm.public.Generation
           .where({ id: generation.id })
           .update({ r2ObjectKey });
+
+        Sentry.logger.info("Audio generated", {
+          orgId: ctx.orgId,
+          generationId: generation.id,
+        });
           
       } catch {
         if (generationId) {
@@ -130,6 +147,12 @@ export const generationsRouter = createTRPCRouter({
             .delete()
             .catch(() => {});
         }
+
+        Sentry.logger.error("Generation failed", {
+          orgId: ctx.orgId,
+          voiceId: input.voiceId,
+        });
+
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to store generated audio",

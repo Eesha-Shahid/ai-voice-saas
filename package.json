@@ -20,6 +20,7 @@
     "@dicebear/collection": "^9.4.2",
     "@dicebear/core": "^9.4.3",
     "@prisma/orm-postgres": "^8.0.0-rc.8",
+    "@sentry/nextjs": "^10.75.0",
     "@shadcn/react": "^0.3.0",
     "@t3-oss/env-nextjs": "^0.13.11",
     "@tanstack/react-form": "^1.33.5",
